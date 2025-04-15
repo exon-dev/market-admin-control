@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -33,6 +34,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 type Seller = {
   id: string;
@@ -125,9 +127,10 @@ const mockSellers: Seller[] = [
 const SellerManagement = () => {
   const [sellers, setSellers] = useState<Seller[]>(mockSellers);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const { toast } = useToast();
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
-    type: "approve" | "suspend" | "delete";
+    type: "approve" | "suspend" | "delete" | "reject";
     sellerId: string | null;
   }>({
     isOpen: false,
@@ -139,7 +142,7 @@ const SellerManagement = () => {
     ? sellers 
     : sellers.filter(seller => seller.status === statusFilter);
 
-  const handleAction = (type: "approve" | "suspend" | "delete", sellerId: string) => {
+  const handleAction = (type: "approve" | "suspend" | "delete" | "reject", sellerId: string) => {
     setModalState({ isOpen: true, type, sellerId });
   };
 
@@ -157,6 +160,8 @@ const SellerManagement = () => {
           };
         } else if (modalState.type === "suspend") {
           return { ...seller, status: "suspended" as const };
+        } else if (modalState.type === "reject") {
+          return { ...seller, status: "rejected" as const };
         }
       }
       return seller;
@@ -164,8 +169,23 @@ const SellerManagement = () => {
 
     if (modalState.type === "delete") {
       setSellers(sellers.filter(seller => seller.id !== modalState.sellerId));
+      toast({
+        title: "Seller Deleted",
+        description: "The seller has been successfully deleted.",
+      });
     } else {
       setSellers(updatedSellers);
+      const actionMessages = {
+        approve: "Seller has been approved successfully.",
+        suspend: "Seller has been suspended.",
+        reject: "Seller has been rejected."
+      };
+      
+      toast({
+        title: `Seller ${modalState.type.charAt(0).toUpperCase() + modalState.type.slice(1)}ed`,
+        description: actionMessages[modalState.type as keyof typeof actionMessages],
+        variant: modalState.type === "approve" ? "default" : "destructive",
+      });
     }
 
     setModalState({ isOpen: false, type: "approve", sellerId: null });
@@ -377,6 +397,16 @@ const SellerManagement = () => {
         title="Delete Seller"
         description="Are you sure you want to delete this seller? This action cannot be undone."
         confirmLabel="Delete"
+        variant="destructive"
+      />
+      
+      <ConfirmationModal
+        isOpen={modalState.isOpen && modalState.type === "reject"}
+        onClose={() => setModalState({ ...modalState, isOpen: false })}
+        onConfirm={confirmAction}
+        title="Reject Seller"
+        description="Are you sure you want to reject this seller? They will need to resubmit their verification documents."
+        confirmLabel="Reject"
         variant="destructive"
       />
     </DashboardLayout>
