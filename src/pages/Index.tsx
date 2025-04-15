@@ -1,10 +1,10 @@
 
 import React from "react";
-import Dashboard from "./Dashboard";
+import { Navigate } from "react-router-dom";
 
-// Redirect the index page to the Dashboard
+// Redirect the index page to the Dashboard using Navigate
 const Index = () => {
-  return <Dashboard />;
+  return <Navigate to="/" replace />;
 };
 
 export default Index;
