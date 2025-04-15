@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -13,7 +12,8 @@ import {
   MoreHorizontal,
   ArrowUpDown,
   Calendar,
-  Store
+  Store,
+  X
 } from "lucide-react";
 import { 
   DropdownMenu,
@@ -34,7 +34,6 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 
-// Mocked seller data
 type Seller = {
   id: string;
   business_name: string;
@@ -200,7 +199,6 @@ const SellerManagement = () => {
       header: "Status",
       cell: ({ row }) => {
         const status = row.original.status;
-        
         const statusMap = {
           pending: { label: "Pending", variant: "pending" as const },
           verified: { label: "Verified", variant: "success" as const },
@@ -209,6 +207,32 @@ const SellerManagement = () => {
         };
         
         const { label, variant } = statusMap[status];
+        
+        if (status === "pending") {
+          return (
+            <div className="flex items-center gap-2">
+              <StatusBadge variant={variant} label={label} />
+              <div className="flex gap-1">
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  onClick={() => handleAction("approve", row.original.id)}
+                  className="h-7"
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={() => handleAction("reject", row.original.id)}
+                  className="h-7"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          );
+        }
         
         return <StatusBadge variant={variant} label={label} />;
       },
@@ -326,7 +350,6 @@ const SellerManagement = () => {
         </Card>
       </div>
 
-      {/* Confirmation Modals */}
       <ConfirmationModal
         isOpen={modalState.isOpen && modalState.type === "approve"}
         onClose={() => setModalState({ ...modalState, isOpen: false })}
