@@ -1,9 +1,9 @@
-
 import { FileText, Check, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { DocumentPreview } from "./DocumentPreview";
 
 interface VerificationInfoProps {
   documentType: string;
@@ -43,24 +43,22 @@ export function VerificationInfoCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Business Document</label>
-              <p>{documentType}</p>
-              <a href={documentUrl} className="text-sm text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                View Document
-              </a>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">Government ID</label>
-              <p>{governmentIdType}</p>
-              <a href={governmentIdUrl} className="text-sm text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                View ID
-              </a>
-            </div>
-          </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <DocumentPreview
+            title="Business Document"
+            description="Business registration and certification documents"
+            documentType={documentType}
+            documentUrl={documentUrl}
+          />
+          <DocumentPreview
+            title="Government ID"
+            description="Valid government-issued identification"
+            documentType={governmentIdType}
+            documentUrl={governmentIdUrl}
+          />
+        </div>
 
+        <div className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="text-sm font-medium text-muted-foreground">Status</label>
