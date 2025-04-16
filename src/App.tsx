@@ -18,6 +18,9 @@ import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import MyAccount from "./pages/MyAccount";
+import Profile from "./pages/Profile";
+import AuditLogs from "./pages/AuditLogs";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,9 @@ const App = () => (
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/security" element={<Security />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/account" element={<MyAccount />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/audit-logs" element={<AuditLogs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
