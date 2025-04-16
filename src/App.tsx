@@ -1,3 +1,5 @@
+
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,9 +20,11 @@ import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import MyAccount from "./pages/MyAccount";
-import Profile from "./pages/Profile";
-import AuditLogs from "./pages/AuditLogs";
+
+// Account Pages
+import MyAccount from "./pages/account/MyAccount";
+import Profile from "./pages/account/Profile";
+import AuditLogs from "./pages/account/AuditLogs";
 
 const queryClient = new QueryClient();
 
@@ -53,3 +57,4 @@ const App = () => (
 );
 
 export default App;
+
