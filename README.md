@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
+# Market Admin Control
 
-## Project info
+A market administration system with authentication and profile management features using Supabase as the backend.
 
-**URL**: https://lovable.dev/projects/b950278f-951f-4e60-bd12-4d3b7366384a
+## Features
 
-## How can I edit this code?
+- User authentication (Sign up, Sign in, Sign out)
+- User profile management
+- Role-based access (Customer and Vendor roles)
+- Secure data handling with Supabase
 
-There are several ways of editing your application.
+## Setup
 
-**Use Lovable**
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Create a Supabase project at [https://supabase.com](https://supabase.com)
+4. Create a `profiles` table in your Supabase database with the following schema:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b950278f-951f-4e60-bd12-4d3b7366384a) and start prompting.
+   - `id`: uuid (primary key, references auth.users.id)
+   - `username`: text
+   - `full_name`: text
+   - `avatar_url`: text
+   - `email`: text
+   - `phone`: text
+   - `bio`: text
+   - `created_at`: timestamp with time zone
+   - `updated_at`: timestamp with time zone
+   - `role`: text
+   - `status`: text
+   - `store_name`: text
 
-Changes made via Lovable will be committed automatically to this repo.
+5. Create a `.env` file in the root directory with your Supabase credentials:
 
-**Use your preferred IDE**
+   ```
+   VITE_SUPABASE_URL=your_supabase_url_here
+   VITE_SUPABASE_PUBLIC_ANON_KEY=your_supabase_anon_key_here
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+6. Run the development server:
+   ```
+   npm run dev
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Authentication Flow
 
-Follow these steps:
+1. **Sign Up**: New users can register with email and password. A profile will be created automatically.
+2. **Sign In**: Existing users can log in with their credentials.
+3. **Profile Management**: Users can view and edit their profile information.
+4. **Sign Out**: Users can log out of their account.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Tech Stack
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
+- TanStack Query (React Query)
+- Supabase (Authentication and Database)
+- React Router
 - Tailwind CSS
 
-## How can I deploy this project?
+## Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/b950278f-951f-4e60-bd12-4d3b7366384a) and click on Share -> Publish.
+- `/src/components`: UI components
+  - `/auth`: Authentication-related components
+  - `/profile`: Profile-related components
+- `/src/contexts`: React contexts
+  - `AuthContext.tsx`: Authentication state management
+- `/src/hooks`: Custom React hooks
+  - `/mutations`: TanStack Query mutations
+  - `/queries`: TanStack Query queries
+- `/src/lib`: Utility functions and libraries
+  - `supabase.ts`: Supabase client configuration
+  - `auth.ts`: Authentication service functions
+- `/src/pages`: Application pages
+- `/src/types`: TypeScript type definitions
 
-## Can I connect a custom domain to my Lovable project?
+## License
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT
