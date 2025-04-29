@@ -1,5 +1,7 @@
 import React from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts";
+import { useNavigate } from "react-router-dom";
 import { Moon, Sun, Bell, Search, User, ChevronDown } from "lucide-react";
 import {
 	DropdownMenu,
@@ -10,9 +12,36 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
 	const { theme, toggleTheme } = useTheme();
+	const { signOut } = useAuth();
+	const navigate = useNavigate();
+	const { toast } = useToast();
+
+	const handleLogout = async () => {
+		try {
+			const { error } = await signOut();
+			
+			if (error) {
+				throw error;
+			}
+			
+			toast({
+				title: "Success",
+				description: "Signed out successfully.",
+			});
+			
+			navigate("/signin");
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.message || "Failed to sign out. Please try again.",
+				variant: "destructive",
+			});
+		}
+	};
 
 	return (
 		<header className="sticky top-0 z-30 h-16 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -54,11 +83,11 @@ export function Header() {
 							</button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuItem>My Account</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => navigate("/profile")}>My Account</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Settings</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Log out</DropdownMenuItem>
+							<DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
