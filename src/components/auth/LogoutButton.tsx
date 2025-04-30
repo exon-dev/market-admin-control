@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/contexts";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LogoutButtonProps {
 	className?: string;
@@ -14,6 +15,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const { signOut } = useAuth();
 	const { toast } = useToast();
+	const navigate = useNavigate();
 
 	const handleLogout = async () => {
 		setIsLoading(true);
@@ -29,9 +31,16 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
 				description: "Signed out successfully.",
 			});
 
-			if (onSuccess) {
-				onSuccess();
-			}
+			// Force a page refresh to clear any in-memory state
+			setTimeout(() => {
+				if (onSuccess) {
+					onSuccess();
+				} else {
+					navigate("/signin");
+				}
+				// Optional: force a full refresh to clear all application state
+				// window.location.href = "/signin";
+			}, 300);
 		} catch (error: any) {
 			toast({
 				title: "Error",
@@ -48,6 +57,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
 			onClick={handleLogout}
 			disabled={isLoading}
 			className={`rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-50 ${className}`}
+			data-testid="logout-button"
 		>
 			{isLoading ? "Signing out..." : "Sign Out"}
 		</button>
