@@ -1,5 +1,7 @@
 import React from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts";
+import { useNavigate } from "react-router-dom";
 import { Moon, Sun, Bell, Search, User, ChevronDown } from "lucide-react";
 import {
 	DropdownMenu,
@@ -14,19 +16,24 @@ import { useAuth } from "@/contexts";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
+
 export function Header() {
 	const { theme, toggleTheme } = useTheme();
 	const { signOut } = useAuth();
+
 	const { toast } = useToast();
 	const navigate = useNavigate();
+
 
 	const handleLogout = async () => {
 		try {
 			const { error } = await signOut();
 
+			
 			if (error) {
 				throw error;
 			}
+			
 
 			toast({
 				title: "Success",
@@ -83,9 +90,9 @@ export function Header() {
 							</button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuItem>My Account</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => navigate("/profile")}>My Account</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Settings</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem
 								onSelect={(e) => {
@@ -95,6 +102,7 @@ export function Header() {
 							>
 								Log out
 							</DropdownMenuItem>
+
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
