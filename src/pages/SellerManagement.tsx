@@ -48,6 +48,7 @@ import {
 	useAllSellersQuery,
 	useSellersWithStatusQuery,
 } from "@/hooks/queries";
+import { useDeleteSellerMutation } from "@/hooks/mutations/useSellerMutation";
 
 const SellerManagement = () => {
 	// Status filter state
@@ -105,6 +106,9 @@ const SellerManagement = () => {
 		sellerId: null,
 	});
 
+	// Add mutation hook for deleting sellers
+	const deleteSellerMutation = useDeleteSellerMutation();
+
 	const handleAction = (
 		type: "approve" | "suspend" | "delete" | "reject",
 		sellerId: string,
@@ -117,10 +121,22 @@ const SellerManagement = () => {
 
 		// Handle action based on type
 		if (modalState.type === "delete") {
-			// For delete, we would typically make an API call here
-			toast({
-				title: "Seller Deleted",
-				description: "The seller has been successfully deleted.",
+			 // Call the delete mutation
+			deleteSellerMutation.mutate(modalState.sellerId, {
+				onSuccess: () => {
+					toast({
+						title: "Seller Deleted",
+						description: "The seller has been successfully deleted.",
+					});
+					setModalState({ isOpen: false, type: "approve", sellerId: null });
+				},
+				onError: (error) => {
+					toast({
+						title: "Error",
+						description: "Failed to delete seller. Please try again.",
+						variant: "destructive",
+					});
+				}
 			});
 		} else {
 			const actionMessages = {
@@ -136,13 +152,9 @@ const SellerManagement = () => {
 				description:
 					actionMessages[modalState.type as keyof typeof actionMessages],
 				variant: modalState.type === "approve" ? "default" : "destructive",
-			});
+				});
+			setModalState({ isOpen: false, type: "approve", sellerId: null });
 		}
-
-		setModalState({ isOpen: false, type: "approve", sellerId: null });
-
-		// Refetch the data (this would typically be handled by React Query's invalidation)
-		// In a real implementation, you'd invalidate the queries after a successful action
 	};
 
 	const columns: ColumnDef<Seller>[] = [
@@ -252,23 +264,17 @@ const SellerManagement = () => {
 										<Check className="mr-2 h-4 w-4" /> Approve
 									</DropdownMenuItem>
 								)}
-								{seller.status !== "suspended" &&
-									seller.status !== "rejected" && (
-										<>
+								{seller.status !== "rejected" && (
+									<>
+										{seller.status !== "rejected" && (
 											<DropdownMenuItem
-												onClick={() => handleAction("suspend", seller.id)}
+												onClick={() => handleAction("reject", seller.id)}
 											>
-												<Ban className="mr-2 h-4 w-4" /> Suspend
+												<X className="mr-2 h-4 w-4" /> Reject
 											</DropdownMenuItem>
-											{seller.status !== "rejected" && (
-												<DropdownMenuItem
-													onClick={() => handleAction("reject", seller.id)}
-												>
-													<X className="mr-2 h-4 w-4" /> Reject
-												</DropdownMenuItem>
-											)}
-										</>
-									)}
+										)}
+									</>
+								)}
 								<DropdownMenuItem
 									onClick={() => handleAction("delete", seller.id)}
 								>

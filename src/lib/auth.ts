@@ -99,8 +99,15 @@ export const signIn = async (
 
 export const signOut = async (): Promise<{ error: Error | null }> => {
 	try {
-		const { error } = await supabase.auth.signOut();
+		// Call Supabase signOut with proper options to ensure full logout
+		const { error } = await supabase.auth.signOut({
+			scope: "global", // This ensures complete signout from all devices
+		});
+
 		if (error) throw error;
+
+		// Clear any local storage data after logout if needed
+		localStorage.removeItem("supabase.auth.token");
 
 		return { error: null };
 	} catch (error) {

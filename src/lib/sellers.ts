@@ -117,3 +117,21 @@ export const updateSellerVerification = async (
 		throw error; // Re-throw the error so we can handle it in the component
 	}
 };
+
+export const deleteSellerVerification = async (seller_id: string) => {
+	try {
+		const { data, error } = await supabase
+			.from("seller_verifications")
+			.delete()
+			.eq("id", seller_id);
+
+		if (error) {
+			console.error("Error deleting seller:", error);
+			throw error;
+		}
+		return data;
+	} catch (error) {
+		console.error("Error deleting seller:", error);
+		throw error;
+	}
+};
