@@ -512,7 +512,7 @@ const SellerDetails = () => {
 												onClick={() =>
 													openDocumentViewer(
 														sellerDetails?.valid_id_front,
-														`ID (Front) - ${
+														`ID - ${
 															sellerDetails?.valid_id || "Government ID"
 														}`,
 														"image",
@@ -520,24 +520,7 @@ const SellerDetails = () => {
 												}
 											>
 												<Eye className="h-4 w-4" />
-												<span>View ID (Front)</span>
-											</Button>
-											<Button
-												variant="secondary"
-												size="sm"
-												className="w-full gap-1 shadow-sm font-medium"
-												onClick={() =>
-													openDocumentViewer(
-														sellerDetails?.valid_id_back,
-														`ID (Back) - ${
-															sellerDetails?.valid_id || "Government ID"
-														}`,
-														"image",
-													)
-												}
-											>
-												<Eye className="h-4 w-4" />
-												<span>View ID (Back)</span>
+												<span>View ID</span>
 											</Button>
 										</div>
 									</div>
