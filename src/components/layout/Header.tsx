@@ -12,27 +12,34 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+
 
 export function Header() {
 	const { theme, toggleTheme } = useTheme();
 	const { signOut } = useAuth();
-	const navigate = useNavigate();
+
 	const { toast } = useToast();
+	const navigate = useNavigate();
+
 
 	const handleLogout = async () => {
 		try {
 			const { error } = await signOut();
+
 			
 			if (error) {
 				throw error;
 			}
 			
+
 			toast({
 				title: "Success",
 				description: "Signed out successfully.",
 			});
-			
+
 			navigate("/signin");
 		} catch (error: any) {
 			toast({
@@ -87,7 +94,15 @@ export function Header() {
 							<DropdownMenuSeparator />
 							<DropdownMenuItem onClick={() => navigate("/settings")}>Settings</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+							<DropdownMenuItem
+								onSelect={(e) => {
+									e.preventDefault();
+									handleLogout();
+								}}
+							>
+								Log out
+							</DropdownMenuItem>
+
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>

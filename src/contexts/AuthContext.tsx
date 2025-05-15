@@ -21,6 +21,7 @@ import {
 import { User } from "@supabase/supabase-js";
 import { Database } from "@/types/supabase";
 import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const signOutMutation = useSignOutMutation();
 	const updateProfileMutation = useUpdateProfileMutation();
 	const [initialized, setInitialized] = useState(false);
+	const queryClient = useQueryClient();
 
 	const user = data?.user || null;
 	const profile = data?.profile || null;
@@ -81,7 +83,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const handleSignOut = async () => {
-		return signOutMutation.mutateAsync();
+		const result = await signOutMutation.mutateAsync();
+		// Clear any auth-related state here if needed
+		if (!result.error) {
+			// Explicitly set the user to null to ensure UI updates correctly
+			queryClient.setQueryData(["user"], null);
+		}
+		return result;
 	};
 
 	const handleUpdateProfile = async (
